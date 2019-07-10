@@ -51,7 +51,7 @@ server.post("/api/users", (req, res) => {
 		users
 			.insert(userInfo)
 			.then(user => {
-				res.status(201).json(user);
+				users.findById(user.id).then(user => res.status(201).json(user));
 			})
 			.catch(error => {
 				res.status(500).json({
@@ -71,7 +71,7 @@ server.delete("/api/users/:id", (req, res) => {
 		.remove(id)
 		.then(deleted => {
 			if (deleted) {
-				res.status(204).end();
+				users.find().then(data => res.status(200).json(data));
 			} else {
 				res
 					.status(404)
@@ -92,7 +92,7 @@ server.put("/api/users/:id", (req, res) => {
 			.update(id, updatedUser)
 			.then(updated => {
 				if (updated) {
-					res.status(200).json(updated);
+					users.findById(id).then(user => res.status(200).json(user));
 				} else {
 					res.status(404).json({
 						message: "The user with the specified ID does not exist."
